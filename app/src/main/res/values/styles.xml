@@ -8,4 +8,42 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Movies Adapter Layout -->
+    <style name="MoviesImageView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/movie_thumbnail_height</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="MovieCardView" parent="CardView.Light">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="android:layout_marginTop">@dimen/card_bottom_and_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/card_bottom_and_top_margin</item>
+        <item name="android:layout_marginLeft">@dimen/card_left_margin</item>
+        <item name="android:layout_marginRight">@dimen/card_right_margin</item>
+    </style>
+
+    <style name="TextLayout">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">@dimen/text_view_layout_height</item>
+    </style>
+
+    <style name="MovieTitle" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/movie_title_tv_size</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginLeft">@dimen/title_text_left_right_margin</item>
+        <item name="android:layout_marginRight">@dimen/title_text_left_right_margin</item>
+    </style>
+    <!-- End -->
+
 </resources>
