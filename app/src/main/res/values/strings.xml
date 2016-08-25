@@ -2,4 +2,5 @@
     <string name="app_name">Popular Movies</string>
     <string name="spinner_choice_popular">Popular</string>
     <string name="spinner_choice_top_rated">Top Rated</string>
+    <string name="menu_settings_text">Settings</string>
 </resources>

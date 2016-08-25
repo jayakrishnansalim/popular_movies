@@ -4,20 +4,20 @@ package com.jay.popularmovies.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 
 import com.jay.popularmovies.R;
 import com.jay.popularmovies.adapter.PopularMoviesAdapter;
@@ -46,6 +46,8 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
 
     private RecyclerView moviesRV;
     private ProgressBar progressBar;
+    private Toolbar toolbar;
+    private AppCompatSpinner sortTypeSpinner;
 
     private PopularMoviesAdapter adapter;
 
@@ -68,13 +70,32 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
 
     private void initialize(View view) {
         initializeViews(view);
+        initToolbar();
+        initializeSpinner();
         initializeRecyclerView();
         initializeAdapter();
+    }
+
+    private void initToolbar() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    }
+
+    private void initializeSpinner() {
+        List<String> choices = new ArrayList<>(2);
+        choices.add(getString(R.string.spinner_choice_popular));
+        choices.add(getString(R.string.spinner_choice_top_rated));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.simple_spinner_item, choices);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortTypeSpinner.setOnItemSelectedListener(this);
+        sortTypeSpinner.setAdapter(dataAdapter);
     }
 
     private void initializeViews(View view) {
         moviesRV = (RecyclerView) view.findViewById(R.id.movies_rv);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        sortTypeSpinner = (AppCompatSpinner) view.findViewById(R.id.sort_type_spinner);
     }
 
     private void initializeRecyclerView() {
@@ -90,16 +111,6 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.spinner);
-        Spinner choice = (Spinner) MenuItemCompat.getActionView(item);
-        List<String> choices = new ArrayList<>(2);
-        choices.add(getString(R.string.spinner_choice_popular));
-        choices.add(getString(R.string.spinner_choice_top_rated));
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item, choices);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        choice.setOnItemSelectedListener(this);
-        choice.setAdapter(dataAdapter);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

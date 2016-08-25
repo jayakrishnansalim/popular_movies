@@ -74,6 +74,7 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
             super(itemView);
             movieThumbnail = (ImageView) itemView.findViewById(R.id.movie_thumbnail_iv);
             movieTitleTV = (TextView) itemView.findViewById(R.id.movie_title_tv);
+            itemView.setOnClickListener(this);
         }
 
         @Override
