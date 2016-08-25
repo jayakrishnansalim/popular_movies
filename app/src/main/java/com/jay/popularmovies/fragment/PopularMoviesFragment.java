@@ -4,18 +4,29 @@ package com.jay.popularmovies.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import com.jay.popularmovies.R;
 import com.jay.popularmovies.adapter.PopularMoviesAdapter;
 import com.jay.popularmovies.model.MovieResponseData;
 import com.jay.popularmovies.retrofit.MoviesService;
 import com.jay.popularmovies.retrofit.RetrofitHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,9 +35,14 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PopularMoviesFragment extends Fragment {
+public class PopularMoviesFragment extends Fragment implements OnItemSelectedListener {
 
     private static final int SPAN_COUNT = 2;
+    private static final int POSITION_POPULAR = 0;
+    private static final int POSITION_TOP_RATED = 1;
+
+    private static final String SORT_TYPE_POPULAR = "Popular";
+    private static final String SORT_TYPE_TOP_RATED = "Top Rated";
 
     private RecyclerView moviesRV;
     private ProgressBar progressBar;
@@ -46,6 +62,7 @@ public class PopularMoviesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
         initialize(view);
     }
 
@@ -53,7 +70,6 @@ public class PopularMoviesFragment extends Fragment {
         initializeViews(view);
         initializeRecyclerView();
         initializeAdapter();
-        getMoviesList();
     }
 
     private void initializeViews(View view) {
@@ -71,14 +87,40 @@ public class PopularMoviesFragment extends Fragment {
         moviesRV.setAdapter(adapter);
     }
 
-    private void getMoviesList() {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.spinner);
+        Spinner choice = (Spinner) MenuItemCompat.getActionView(item);
+        List<String> choices = new ArrayList<>(2);
+        choices.add(getString(R.string.spinner_choice_popular));
+        choices.add(getString(R.string.spinner_choice_top_rated));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, choices);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        choice.setOnItemSelectedListener(this);
+        choice.setAdapter(dataAdapter);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void getMoviesList(String sortType, final boolean clearExistingData) {
         MoviesService service = RetrofitHelper.getInstance().getRetrofit().create(MoviesService.class);
-        Call<MovieResponseData> data = service.getMovieList();
+        Call<MovieResponseData> data;
+        switch (sortType) {
+            case SORT_TYPE_POPULAR:
+                data = service.getPopularMovieList();
+                break;
+            case SORT_TYPE_TOP_RATED:
+                data = service.getTopRatedMovieList();
+                break;
+            default:
+                data = service.getPopularMovieList();
+        }
         data.enqueue(new Callback<MovieResponseData>() {
             @Override
             public void onResponse(Call<MovieResponseData> call, Response<MovieResponseData> response) {
                 progressBar.setVisibility(View.GONE);
-                processMovieResponse(response.body());
+                processMovieResponse(response.body(), clearExistingData);
             }
 
             @Override
@@ -88,7 +130,23 @@ public class PopularMoviesFragment extends Fragment {
         });
     }
 
-    private void processMovieResponse(MovieResponseData responseData) {
-        adapter.setMovieDataList(responseData.getMovieDataList());
+    private void processMovieResponse(MovieResponseData responseData, boolean clearExistingData) {
+        adapter.setMovieDataList(responseData.getMovieDataList(), clearExistingData);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        progressBar.setVisibility(View.VISIBLE);
+        switch (position) {
+            case POSITION_POPULAR:
+                getMoviesList(SORT_TYPE_POPULAR, true);
+                break;
+            case POSITION_TOP_RATED:
+                getMoviesList(SORT_TYPE_TOP_RATED, true);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
     }
 }

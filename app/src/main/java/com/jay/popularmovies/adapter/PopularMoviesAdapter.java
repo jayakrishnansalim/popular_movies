@@ -57,7 +57,10 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
         return movieDataList.size();
     }
 
-    public void setMovieDataList(List<MovieData> movieDataList) {
+    public void setMovieDataList(List<MovieData> movieDataList, boolean clearExistingData) {
+        if (clearExistingData) {
+            this.movieDataList.clear();
+        }
         this.movieDataList.addAll(movieDataList);
         notifyDataSetChanged();
     }

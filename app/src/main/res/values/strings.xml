@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="spinner_choice_popular">Popular</string>
+    <string name="spinner_choice_top_rated">Top Rated</string>
 </resources>

@@ -12,5 +12,8 @@ import retrofit2.http.GET;
 public interface MoviesService {
 
     @GET(APIConstants.MOST_POPULAR_MOVIES_URL + "?api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY)
-    Call<MovieResponseData> getMovieList();
+    Call<MovieResponseData> getPopularMovieList();
+
+    @GET(APIConstants.TOP_RATED_MOVIES_URL + "?api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY)
+    Call<MovieResponseData> getTopRatedMovieList();
 }
