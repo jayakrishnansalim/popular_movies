@@ -1,5 +1,7 @@
 package com.jay.popularmovies.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jay.popularmovies.R;
+import com.jay.popularmovies.activity.MovieDetailActivity;
+import com.jay.popularmovies.constant.Const;
 import com.jay.popularmovies.model.MovieData;
 import com.jay.popularmovies.util.Util;
 
@@ -21,12 +25,14 @@ import java.util.List;
  */
 public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int LIST_INITIAL_SIZE = 20;
+
     private Fragment fragment;
     private List<MovieData> movieDataList;
 
     public PopularMoviesAdapter(Fragment fragment) {
         this.fragment = fragment;
-        movieDataList = new ArrayList<>(20);
+        movieDataList = new ArrayList<>(LIST_INITIAL_SIZE);
     }
 
     @Override
@@ -69,9 +75,11 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         private ImageView movieThumbnail;
         private TextView movieTitleTV;
+        private PopularMoviesAdapter adapter;
 
         public PopularMoviesViewHolder(View itemView, PopularMoviesAdapter adapter) {
             super(itemView);
+            this.adapter = adapter;
             movieThumbnail = (ImageView) itemView.findViewById(R.id.movie_thumbnail_iv);
             movieTitleTV = (TextView) itemView.findViewById(R.id.movie_title_tv);
             itemView.setOnClickListener(this);
@@ -79,7 +87,15 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @Override
         public void onClick(View view) {
-
+            Activity activity = adapter.fragment.getActivity();
+            MovieData movieData = adapter.movieDataList.get(getAdapterPosition());
+            Intent detailActivityIntent = new Intent(activity, MovieDetailActivity.class);
+            detailActivityIntent.putExtra(Const.KEY_ORIGINAL_TITLE, movieData.getOriginalTitle());
+            detailActivityIntent.putExtra(Const.KEY_IMAGE_THUMBNAIL, movieData.getPosterPath());
+            detailActivityIntent.putExtra(Const.KEY_PLOT_SYNOPSIS, movieData.getOverview());
+            detailActivityIntent.putExtra(Const.KEY_AVERAGE_RATING, movieData.getVoteAverage());
+            detailActivityIntent.putExtra(Const.KEY_RELEASE_DATE, movieData.getReleaseDate());
+            activity.startActivity(detailActivityIntent);
         }
     }
 }
