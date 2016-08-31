@@ -106,6 +106,65 @@
         <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
     </style>
 
+    <style name="MovieThumbnail">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="ShortImageView">
+        <item name="android:layout_height">200dp</item>
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="SynopsisText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingExtra">8dp</item>
+    </style>
+
+    <style name="TitleText" parent="TextAppearance.AppCompat">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="RatingValueText" parent="TitleText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+    </style>
+
+    <style name="RatingText" parent="RatingValueText">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:text">@string/avg_rating</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="ReleaseDate" parent="RatingText">
+        <item name="android:text">@string/release_date</item>
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+
+    <style name="ReleaseDateValueText" parent="RatingValueText">
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+
     <!-- End -->
 
 </resources>

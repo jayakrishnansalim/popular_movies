@@ -13,8 +13,14 @@ import com.jay.popularmovies.retrofit.APIConstants;
  */
 public class Util {
 
-    public static void loadImage(ImageView imageView, String url, Context context) {
-        Glide.with(context).load(APIConstants.IMAGE_BASE_URL + url)
+    public static void loadImage(ImageView imageView, String url, Context context, boolean large) {
+        String baseURL;
+        if (large) {
+            baseURL = APIConstants.LARGE_IMAGE_BASE_URL;
+        } else {
+            baseURL = APIConstants.IMAGE_BASE_URL;
+        }
+        Glide.with(context).load(baseURL + url)
                 .thumbnail(0.5f)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

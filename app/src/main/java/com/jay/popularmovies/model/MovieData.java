@@ -24,6 +24,13 @@ public class MovieData {
     @SerializedName("vote_average")
     private double voteAverage;
 
+    @SerializedName("backdrop_path")
+    private String backdropPath;
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
     public String getPosterPath() {
         return posterPath;
     }
@@ -57,6 +64,7 @@ public class MovieData {
                 ", originalTitle='" + originalTitle + '\'' +
                 ", title='" + title + '\'' +
                 ", voteAverage=" + voteAverage +
+                ", backdropPath='" + backdropPath + '\'' +
                 '}';
     }
 }

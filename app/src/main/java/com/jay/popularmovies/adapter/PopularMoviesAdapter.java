@@ -53,7 +53,7 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private void setFields(PopularMoviesViewHolder viewHolder, MovieData data) {
-        Util.loadImage(viewHolder.movieThumbnail, data.getPosterPath(), fragment.getActivity());
+        Util.loadImage(viewHolder.movieThumbnail, data.getPosterPath(), fragment.getActivity(), false);
         viewHolder.movieTitleTV.setText(data.getTitle());
     }
 
@@ -95,6 +95,8 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
             detailActivityIntent.putExtra(Const.KEY_PLOT_SYNOPSIS, movieData.getOverview());
             detailActivityIntent.putExtra(Const.KEY_AVERAGE_RATING, movieData.getVoteAverage());
             detailActivityIntent.putExtra(Const.KEY_RELEASE_DATE, movieData.getReleaseDate());
+            detailActivityIntent.putExtra(Const.KEY_BACK_DROP_PATH, movieData.getBackdropPath());
+            detailActivityIntent.putExtra(Const.KEY_TITLE, movieData.getTitle());
             activity.startActivity(detailActivityIntent);
         }
     }

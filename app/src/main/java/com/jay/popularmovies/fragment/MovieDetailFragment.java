@@ -27,10 +27,15 @@ public class MovieDetailFragment extends Fragment {
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView movieShortImage;
     private TextView synopsisText;
+    private TextView movieTitleText;
+    private TextView ratingText;
+    private TextView releaseDateValueTV;
 
     private String originalTitle;
     private String movieThumbnail;
+    private String backDropPath;
     private String plotSynopsis;
+    private String title;
     private double averageRating;
     private String releaseDate;
 
@@ -61,6 +66,9 @@ public class MovieDetailFragment extends Fragment {
         collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         movieShortImage = (ImageView) view.findViewById(R.id.movie_short_image);
         synopsisText = (TextView) view.findViewById(R.id.synopsisText);
+        movieTitleText = (TextView) view.findViewById(R.id.movie_title_tv);
+        ratingText = (TextView) view.findViewById(R.id.rating_value_text);
+        releaseDateValueTV = (TextView) view.findViewById(R.id.release_date_value_tv);
     }
 
     @Override
@@ -78,13 +86,18 @@ public class MovieDetailFragment extends Fragment {
         plotSynopsis = getActivity().getIntent().getStringExtra(Const.KEY_PLOT_SYNOPSIS);
         averageRating = getActivity().getIntent().getDoubleExtra(Const.KEY_AVERAGE_RATING, 0);
         releaseDate = getActivity().getIntent().getStringExtra(Const.KEY_RELEASE_DATE);
+        backDropPath = getActivity().getIntent().getStringExtra(Const.KEY_BACK_DROP_PATH);
+        title = getActivity().getIntent().getStringExtra(Const.KEY_TITLE);
     }
 
     private void setFieldValues() {
-        Util.loadImage(movieThumbnailIV, movieThumbnail, getActivity());
+        Util.loadImage(movieThumbnailIV, backDropPath, getActivity(), true);
         collapsingToolbarLayout.setTitle(originalTitle);
-        Util.loadImage(movieShortImage, movieThumbnail, getActivity());
+        Util.loadImage(movieShortImage, movieThumbnail, getActivity(), false);
         synopsisText.setText(plotSynopsis);
+        movieTitleText.setText(title);
+        ratingText.setText(String.valueOf(averageRating));
+        releaseDateValueTV.setText(releaseDate);
     }
 
     @SuppressWarnings("ConstantConditions")
