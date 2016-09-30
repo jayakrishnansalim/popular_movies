@@ -7,7 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 /**
- * Created by JK on 22/08/16.
+ * Retrofit movie service class.
  */
 public interface MoviesService {
 

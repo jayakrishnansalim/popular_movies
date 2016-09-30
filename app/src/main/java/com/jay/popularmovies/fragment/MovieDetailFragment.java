@@ -22,10 +22,12 @@ import com.jay.popularmovies.util.Util;
  */
 public class MovieDetailFragment extends Fragment {
 
+    private static final int AVG_RATING_DEFAULT_VAL = 0;
+
     private Toolbar toolbar;
-    private ImageView movieThumbnailIV;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView movieShortImage;
+    private ImageView movieThumbnailIV;
     private TextView synopsisText;
     private TextView movieTitleText;
     private TextView ratingText;
@@ -36,8 +38,8 @@ public class MovieDetailFragment extends Fragment {
     private String backDropPath;
     private String plotSynopsis;
     private String title;
-    private double averageRating;
     private String releaseDate;
+    private double averageRating;
 
     public MovieDetailFragment() {
     }
@@ -80,16 +82,23 @@ public class MovieDetailFragment extends Fragment {
         setFieldValues();
     }
 
+    /**
+     * Method for extracting data from intent obj
+     */
     private void getData() {
         originalTitle = getActivity().getIntent().getStringExtra(Const.KEY_ORIGINAL_TITLE);
         movieThumbnail = getActivity().getIntent().getStringExtra(Const.KEY_IMAGE_THUMBNAIL);
         plotSynopsis = getActivity().getIntent().getStringExtra(Const.KEY_PLOT_SYNOPSIS);
-        averageRating = getActivity().getIntent().getDoubleExtra(Const.KEY_AVERAGE_RATING, 0);
+        averageRating = getActivity().getIntent().getDoubleExtra(Const.KEY_AVERAGE_RATING,
+                AVG_RATING_DEFAULT_VAL);
         releaseDate = getActivity().getIntent().getStringExtra(Const.KEY_RELEASE_DATE);
         backDropPath = getActivity().getIntent().getStringExtra(Const.KEY_BACK_DROP_PATH);
         title = getActivity().getIntent().getStringExtra(Const.KEY_TITLE);
     }
 
+    /**
+     * Method for setting values to UI fields.
+     */
     private void setFieldValues() {
         Util.loadImage(movieThumbnailIV, backDropPath, getActivity(), true);
         collapsingToolbarLayout.setTitle(originalTitle);
@@ -100,9 +109,12 @@ public class MovieDetailFragment extends Fragment {
         releaseDateValueTV.setText(releaseDate);
     }
 
-    @SuppressWarnings("ConstantConditions")
+
     private void initToolbar() {
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        appCompatActivity.setSupportActionBar(toolbar);
+        if (appCompatActivity.getSupportActionBar() != null) {
+            appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 }

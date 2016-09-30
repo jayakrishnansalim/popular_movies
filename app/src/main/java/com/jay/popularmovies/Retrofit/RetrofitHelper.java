@@ -22,6 +22,11 @@ public class RetrofitHelper {
                 .build();
     }
 
+    /**
+     * Method responsible for returning singleton instance of RetrofitHelper
+     *
+     * @return RetrofitHelper
+     */
     public static RetrofitHelper getInstance() {
         if (retrofitHelper == null) {
             retrofitHelper = new RetrofitHelper();

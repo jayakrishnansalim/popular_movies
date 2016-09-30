@@ -10,20 +10,20 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.jay.popularmovies.R;
 import com.jay.popularmovies.adapter.PopularMoviesAdapter;
 import com.jay.popularmovies.model.MovieResponseData;
 import com.jay.popularmovies.retrofit.MoviesService;
 import com.jay.popularmovies.retrofit.RetrofitHelper;
+import com.jay.popularmovies.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +68,11 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
         initialize(view);
     }
 
+    /**
+     * Method for initializing views
+     *
+     * @param view - View
+     */
     private void initialize(View view) {
         initializeViews(view);
         initToolbar();
@@ -108,12 +113,11 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
         moviesRV.setAdapter(adapter);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
+    /**
+     * Method for fetching movied list from API
+     * @param sortType - sort type
+     * @param clearExistingData - Whether existing data needs to be cleared or not
+     */
     private void getMoviesList(String sortType, final boolean clearExistingData) {
         MoviesService service = RetrofitHelper.getInstance().getRetrofit().create(MoviesService.class);
         Call<MovieResponseData> data;
@@ -147,13 +151,17 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        progressBar.setVisibility(View.VISIBLE);
-        switch (position) {
-            case POSITION_POPULAR:
-                getMoviesList(SORT_TYPE_POPULAR, true);
-                break;
-            case POSITION_TOP_RATED:
-                getMoviesList(SORT_TYPE_TOP_RATED, true);
+        if (Util.isOnline(getActivity())) {
+            progressBar.setVisibility(View.VISIBLE);
+            switch (position) {
+                case POSITION_POPULAR:
+                    getMoviesList(SORT_TYPE_POPULAR, true);
+                    break;
+                case POSITION_TOP_RATED:
+                    getMoviesList(SORT_TYPE_TOP_RATED, true);
+            }
+        } else {
+            Toast.makeText(getActivity(), R.string.no_network_connectivity, Toast.LENGTH_LONG).show();
         }
     }
 

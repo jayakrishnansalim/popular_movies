@@ -15,6 +15,11 @@ public class MainActivity extends AppCompatActivity {
         loadFragment(savedInstanceState);
     }
 
+    /**
+     * Method for loading Popular movies fragment
+     *
+     * @param savedInstanceState saved instance bundle
+     */
     private void loadFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

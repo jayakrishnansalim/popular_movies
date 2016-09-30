@@ -52,6 +52,12 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+    /**
+     * Method for setting values to fields
+     *
+     * @param viewHolder - View Holder
+     * @param data       - DTO
+     */
     private void setFields(PopularMoviesViewHolder viewHolder, MovieData data) {
         Util.loadImage(viewHolder.movieThumbnail, data.getPosterPath(), fragment.getActivity(), false);
         viewHolder.movieTitleTV.setText(data.getTitle());
@@ -63,6 +69,11 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
         return movieDataList.size();
     }
 
+    /**
+     * Method for setting movie list
+     * @param movieDataList - List
+     * @param clearExistingData - whether existing data needs to be cleared or not
+     */
     public void setMovieDataList(List<MovieData> movieDataList, boolean clearExistingData) {
         if (clearExistingData) {
             this.movieDataList.clear();
@@ -77,7 +88,7 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
         private TextView movieTitleTV;
         private PopularMoviesAdapter adapter;
 
-        public PopularMoviesViewHolder(View itemView, PopularMoviesAdapter adapter) {
+        PopularMoviesViewHolder(View itemView, PopularMoviesAdapter adapter) {
             super(itemView);
             this.adapter = adapter;
             movieThumbnail = (ImageView) itemView.findViewById(R.id.movie_thumbnail_iv);
