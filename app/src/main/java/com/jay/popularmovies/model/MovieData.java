@@ -21,6 +21,7 @@ public class MovieData implements Parcelable {
             return new MovieData[size];
         }
     };
+
     @SerializedName("poster_path")
     private String posterPath;
     private String overview;

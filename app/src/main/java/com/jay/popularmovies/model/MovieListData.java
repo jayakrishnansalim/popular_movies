@@ -23,6 +23,7 @@ public class MovieListData implements Parcelable {
             return new MovieListData[size];
         }
     };
+
     private List<MovieData> movieDataList;
 
     public MovieListData() {
