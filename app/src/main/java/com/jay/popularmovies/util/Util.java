@@ -11,7 +11,7 @@ import com.jay.popularmovies.retrofit.APIConstants;
 
 /**
  * Util class for popular movies app
- * Created by JK on 24/08/16.
+ * Created by Jay on 24/08/16.
  */
 public class Util {
 

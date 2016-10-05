@@ -101,13 +101,7 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<RecyclerView.View
             Activity activity = adapter.fragment.getActivity();
             MovieData movieData = adapter.movieDataList.get(getAdapterPosition());
             Intent detailActivityIntent = new Intent(activity, MovieDetailActivity.class);
-            detailActivityIntent.putExtra(Const.KEY_ORIGINAL_TITLE, movieData.getOriginalTitle());
-            detailActivityIntent.putExtra(Const.KEY_IMAGE_THUMBNAIL, movieData.getPosterPath());
-            detailActivityIntent.putExtra(Const.KEY_PLOT_SYNOPSIS, movieData.getOverview());
-            detailActivityIntent.putExtra(Const.KEY_AVERAGE_RATING, movieData.getVoteAverage());
-            detailActivityIntent.putExtra(Const.KEY_RELEASE_DATE, movieData.getReleaseDate());
-            detailActivityIntent.putExtra(Const.KEY_BACK_DROP_PATH, movieData.getBackdropPath());
-            detailActivityIntent.putExtra(Const.KEY_TITLE, movieData.getTitle());
+            detailActivityIntent.putExtra(Const.KEY_MOVIE_DATA, movieData);
             activity.startActivity(detailActivityIntent);
         }
     }

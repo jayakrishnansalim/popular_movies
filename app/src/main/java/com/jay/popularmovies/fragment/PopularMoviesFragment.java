@@ -1,6 +1,12 @@
 package com.jay.popularmovies.fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +26,9 @@ import android.widget.Toast;
 
 import com.jay.popularmovies.R;
 import com.jay.popularmovies.adapter.PopularMoviesAdapter;
+import com.jay.popularmovies.constant.Const;
+import com.jay.popularmovies.model.MovieData;
+import com.jay.popularmovies.model.MovieListData;
 import com.jay.popularmovies.model.MovieResponseData;
 import com.jay.popularmovies.retrofit.MoviesService;
 import com.jay.popularmovies.retrofit.RetrofitHelper;
@@ -48,12 +57,18 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     private ProgressBar progressBar;
     private Toolbar toolbar;
     private AppCompatSpinner sortTypeSpinner;
+    private NetworkReceiver networkReceiver;
 
     private PopularMoviesAdapter adapter;
+    private MovieListData movieListData;
 
     public PopularMoviesFragment() {
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +80,19 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
-        initialize(view);
+        initialize(view, savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {
+        registerBroadcastReceiver();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        unregisterBroadcastReceiver();
+        super.onResume();
     }
 
     /**
@@ -73,12 +100,31 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
      *
      * @param view - View
      */
-    private void initialize(View view) {
+    private void initialize(View view, Bundle savedInstanceState) {
         initializeViews(view);
         initToolbar();
         initializeSpinner();
         initializeRecyclerView();
-        initializeAdapter();
+        initializeAdapter(savedInstanceState);
+    }
+
+    /**
+     * Method for unregistering network broadcast receiver
+     */
+    public void unregisterBroadcastReceiver() {
+        networkReceiver = new NetworkReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        getContext().registerReceiver(networkReceiver, filter);
+    }
+
+    /**
+     * Method for registering network broadcast receiver
+     */
+    public void registerBroadcastReceiver() {
+        if (networkReceiver != null) {
+            getContext().unregisterReceiver(networkReceiver);
+        }
     }
 
     private void initToolbar() {
@@ -108,9 +154,15 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
         moviesRV.setLayoutManager(movieLayoutManager);
     }
 
-    private void initializeAdapter() {
+    private void initializeAdapter(Bundle savedInstanceState) {
         adapter = new PopularMoviesAdapter(this);
         moviesRV.setAdapter(adapter);
+        if (savedInstanceState != null && savedInstanceState.containsKey(Const.KEY_MOVIE_DATA)) {
+            movieListData = savedInstanceState.getParcelable(Const.KEY_MOVIE_DATA);
+            if (movieListData != null) {
+                adapter.setMovieDataList(movieListData.getMovieDataList(), true);
+            }
+        }
     }
 
     /**
@@ -120,6 +172,24 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
      */
     private void getMoviesList(String sortType, final boolean clearExistingData) {
         MoviesService service = RetrofitHelper.getInstance().getRetrofit().create(MoviesService.class);
+        Call<MovieResponseData> data = getMovieResponseData(sortType, service);
+        data.enqueue(new Callback<MovieResponseData>() {
+            @Override
+            public void onResponse(Call<MovieResponseData> call, Response<MovieResponseData> response) {
+                progressBar.setVisibility(View.GONE);
+                processMovieResponse(response.body(), clearExistingData);
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponseData> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), R.string.something_went_wrong_text, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+    }
+
+    private Call<MovieResponseData> getMovieResponseData(String sortType, MoviesService service) {
         Call<MovieResponseData> data;
         switch (sortType) {
             case SORT_TYPE_POPULAR:
@@ -131,41 +201,69 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
             default:
                 data = service.getPopularMovieList();
         }
-        data.enqueue(new Callback<MovieResponseData>() {
-            @Override
-            public void onResponse(Call<MovieResponseData> call, Response<MovieResponseData> response) {
-                progressBar.setVisibility(View.GONE);
-                processMovieResponse(response.body(), clearExistingData);
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponseData> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-            }
-        });
+        return data;
     }
 
     private void processMovieResponse(MovieResponseData responseData, boolean clearExistingData) {
-        adapter.setMovieDataList(responseData.getMovieDataList(), clearExistingData);
+        List<MovieData> movieDataList = responseData.getMovieDataList();
+        movieListData = new MovieListData();
+        movieListData.setMovieDataList(movieDataList);
+        adapter.setMovieDataList(movieDataList, clearExistingData);
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
         if (Util.isOnline(getActivity())) {
-            progressBar.setVisibility(View.VISIBLE);
-            switch (position) {
-                case POSITION_POPULAR:
-                    getMoviesList(SORT_TYPE_POPULAR, true);
-                    break;
-                case POSITION_TOP_RATED:
-                    getMoviesList(SORT_TYPE_TOP_RATED, true);
-            }
+            fetchMovieList(position);
         } else {
-            Toast.makeText(getActivity(), R.string.no_network_connectivity, Toast.LENGTH_LONG).show();
+            showNoConnectivityToast();
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(Const.KEY_MOVIE_DATA, movieListData);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void fetchMovieList(int position) {
+        progressBar.setVisibility(View.VISIBLE);
+        switch (position) {
+            case POSITION_POPULAR:
+                getMoviesList(SORT_TYPE_POPULAR, true);
+                break;
+            case POSITION_TOP_RATED:
+                getMoviesList(SORT_TYPE_TOP_RATED, true);
+        }
+    }
+
+    private void showNoConnectivityToast() {
+        Toast.makeText(getActivity(), R.string.no_network_connectivity, Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Broadcast receiver which gets information about change in network state
+     */
+    public class NetworkReceiver extends BroadcastReceiver {
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
+                    if (movieListData == null) {
+                        int selectedPosition = sortTypeSpinner.getSelectedItemPosition();
+                        fetchMovieList(selectedPosition);
+                    }
+                } else if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
+                    showNoConnectivityToast();
+                }
+            }
+        }
     }
 }

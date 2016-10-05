@@ -12,17 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jay.popularmovies.R;
 import com.jay.popularmovies.constant.Const;
+import com.jay.popularmovies.model.MovieData;
 import com.jay.popularmovies.util.Util;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MovieDetailFragment extends Fragment {
-
-    private static final int AVG_RATING_DEFAULT_VAL = 0;
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -33,13 +33,7 @@ public class MovieDetailFragment extends Fragment {
     private TextView ratingText;
     private TextView releaseDateValueTV;
 
-    private String originalTitle;
-    private String movieThumbnail;
-    private String backDropPath;
-    private String plotSynopsis;
-    private String title;
-    private String releaseDate;
-    private double averageRating;
+    private MovieData movieData;
 
     public MovieDetailFragment() {
     }
@@ -55,6 +49,17 @@ public class MovieDetailFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initialize(view);
+        checkNetworkState();
+    }
+
+    /**
+     * Method responsible for checking the network state
+     */
+    private void checkNetworkState() {
+        if (!Util.isOnline(getActivity())) {
+            Toast.makeText(getActivity(), R.string.no_network_connectivity,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     private void initialize(View view) {
@@ -86,27 +91,20 @@ public class MovieDetailFragment extends Fragment {
      * Method for extracting data from intent obj
      */
     private void getData() {
-        originalTitle = getActivity().getIntent().getStringExtra(Const.KEY_ORIGINAL_TITLE);
-        movieThumbnail = getActivity().getIntent().getStringExtra(Const.KEY_IMAGE_THUMBNAIL);
-        plotSynopsis = getActivity().getIntent().getStringExtra(Const.KEY_PLOT_SYNOPSIS);
-        averageRating = getActivity().getIntent().getDoubleExtra(Const.KEY_AVERAGE_RATING,
-                AVG_RATING_DEFAULT_VAL);
-        releaseDate = getActivity().getIntent().getStringExtra(Const.KEY_RELEASE_DATE);
-        backDropPath = getActivity().getIntent().getStringExtra(Const.KEY_BACK_DROP_PATH);
-        title = getActivity().getIntent().getStringExtra(Const.KEY_TITLE);
+        movieData = getActivity().getIntent().getParcelableExtra(Const.KEY_MOVIE_DATA);
     }
 
     /**
      * Method for setting values to UI fields.
      */
     private void setFieldValues() {
-        Util.loadImage(movieThumbnailIV, backDropPath, getActivity(), true);
-        collapsingToolbarLayout.setTitle(originalTitle);
-        Util.loadImage(movieShortImage, movieThumbnail, getActivity(), false);
-        synopsisText.setText(plotSynopsis);
-        movieTitleText.setText(title);
-        ratingText.setText(String.valueOf(averageRating));
-        releaseDateValueTV.setText(releaseDate);
+        Util.loadImage(movieThumbnailIV, movieData.getBackdropPath(), getActivity(), true);
+        collapsingToolbarLayout.setTitle(movieData.getOriginalTitle());
+        Util.loadImage(movieShortImage, movieData.getPosterPath(), getActivity(), false);
+        synopsisText.setText(movieData.getOverview());
+        movieTitleText.setText(movieData.getTitle());
+        ratingText.setText(String.valueOf(movieData.getVoteAverage()));
+        releaseDateValueTV.setText(movieData.getReleaseDate());
     }
 
 

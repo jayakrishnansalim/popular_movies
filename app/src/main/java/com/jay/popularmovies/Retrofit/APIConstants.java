@@ -2,7 +2,7 @@ package com.jay.popularmovies.retrofit;
 
 /**
  * Interface for declaring APIs and related constants
- * Created by JK on 20/08/16.
+ * Created by Jay on 20/08/16.
  */
 public interface APIConstants {
 
