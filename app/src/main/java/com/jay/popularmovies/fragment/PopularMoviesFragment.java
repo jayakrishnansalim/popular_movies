@@ -62,6 +62,8 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     private PopularMoviesAdapter adapter;
     private MovieListData movieListData;
 
+    private boolean hasActivityRecreated;
+
     public PopularMoviesFragment() {
     }
 
@@ -158,6 +160,7 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
         adapter = new PopularMoviesAdapter(this);
         moviesRV.setAdapter(adapter);
         if (savedInstanceState != null && savedInstanceState.containsKey(Const.KEY_MOVIE_DATA)) {
+            hasActivityRecreated = true;
             movieListData = savedInstanceState.getParcelable(Const.KEY_MOVIE_DATA);
             if (movieListData != null) {
                 adapter.setMovieDataList(movieListData.getMovieDataList(), true);
@@ -214,7 +217,11 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
         if (Util.isOnline(getActivity())) {
-            fetchMovieList(position);
+            if (!hasActivityRecreated) {
+                fetchMovieList(position);
+            } else {
+                hasActivityRecreated = false;
+            }
         } else {
             showNoConnectivityToast();
         }
