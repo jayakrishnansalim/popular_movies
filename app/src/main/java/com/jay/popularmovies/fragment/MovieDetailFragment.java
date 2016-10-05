@@ -107,7 +107,6 @@ public class MovieDetailFragment extends Fragment {
         releaseDateValueTV.setText(movieData.getReleaseDate());
     }
 
-
     private void initToolbar() {
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         appCompatActivity.setSupportActionBar(toolbar);
