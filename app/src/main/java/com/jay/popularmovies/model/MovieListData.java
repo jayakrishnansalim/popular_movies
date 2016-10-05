@@ -26,7 +26,6 @@ public class MovieListData implements Parcelable {
     private List<MovieData> movieDataList;
 
     public MovieListData() {
-
     }
 
     @SuppressWarnings("unchecked")
