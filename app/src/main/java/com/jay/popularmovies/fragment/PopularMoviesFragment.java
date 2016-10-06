@@ -37,6 +37,8 @@ import com.jay.popularmovies.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,12 +55,16 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     private static final String SORT_TYPE_POPULAR = "Popular";
     private static final String SORT_TYPE_TOP_RATED = "Top Rated";
 
-    private RecyclerView moviesRV;
-    private ProgressBar progressBar;
-    private Toolbar toolbar;
-    private AppCompatSpinner sortTypeSpinner;
-    private NetworkReceiver networkReceiver;
+    @BindView(R.id.movies_rv)
+    RecyclerView moviesRV;
+    @BindView(R.id.progressbar)
+    ProgressBar progressBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.sort_type_spinner)
+    AppCompatSpinner sortTypeSpinner;
 
+    private NetworkReceiver networkReceiver;
     private PopularMoviesAdapter adapter;
     private MovieListData movieListData;
 
@@ -75,14 +81,16 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_popular_movies, container, false);
+        View view = inflater.inflate(R.layout.fragment_popular_movies, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
-        initialize(view, savedInstanceState);
+        initialize(savedInstanceState);
     }
 
     @Override
@@ -100,10 +108,9 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     /**
      * Method for initializing views
      *
-     * @param view - View
+     * @param savedInstanceState - saved instance state
      */
-    private void initialize(View view, Bundle savedInstanceState) {
-        initializeViews(view);
+    private void initialize(Bundle savedInstanceState) {
         initToolbar();
         initializeSpinner();
         initializeRecyclerView();
@@ -142,13 +149,6 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortTypeSpinner.setOnItemSelectedListener(this);
         sortTypeSpinner.setAdapter(dataAdapter);
-    }
-
-    private void initializeViews(View view) {
-        moviesRV = (RecyclerView) view.findViewById(R.id.movies_rv);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        sortTypeSpinner = (AppCompatSpinner) view.findViewById(R.id.sort_type_spinner);
     }
 
     private void initializeRecyclerView() {
