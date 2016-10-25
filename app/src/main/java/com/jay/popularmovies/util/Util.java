@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.jay.popularmovies.R;
 import com.jay.popularmovies.retrofit.APIConstants;
 
 /**
@@ -35,6 +36,7 @@ public class Util {
         Glide.with(context).load(baseURL + url)
                 .thumbnail(THUMBNAIL_SIZE_MULTIPLIER)
                 .crossFade()
+                .error(R.drawable.ic_image_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }

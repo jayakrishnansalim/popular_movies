@@ -19,19 +19,30 @@ import com.jay.popularmovies.constant.Const;
 import com.jay.popularmovies.model.MovieData;
 import com.jay.popularmovies.util.Util;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MovieDetailFragment extends Fragment {
 
-    private Toolbar toolbar;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private ImageView movieShortImage;
-    private ImageView movieThumbnailIV;
-    private TextView synopsisText;
-    private TextView movieTitleText;
-    private TextView ratingText;
-    private TextView releaseDateValueTV;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.movie_short_image)
+    ImageView movieShortImage;
+    @BindView(R.id.movie_thumbnail_iv)
+    ImageView movieThumbnailIV;
+    @BindView(R.id.synopsisText)
+    TextView synopsisText;
+    @BindView(R.id.movie_title_tv)
+    TextView movieTitleText;
+    @BindView(R.id.rating_value_text)
+    TextView ratingText;
+    @BindView(R.id.release_date_value_tv)
+    TextView releaseDateValueTV;
 
     private MovieData movieData;
 
@@ -42,13 +53,15 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initialize(view);
+        initialize();
         checkNetworkState();
     }
 
@@ -62,20 +75,8 @@ public class MovieDetailFragment extends Fragment {
         }
     }
 
-    private void initialize(View view) {
-        initializeViews(view);
+    private void initialize() {
         initToolbar();
-    }
-
-    private void initializeViews(View view) {
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        movieThumbnailIV = (ImageView) view.findViewById(R.id.movie_thumbnail_iv);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-        movieShortImage = (ImageView) view.findViewById(R.id.movie_short_image);
-        synopsisText = (TextView) view.findViewById(R.id.synopsisText);
-        movieTitleText = (TextView) view.findViewById(R.id.movie_title_tv);
-        ratingText = (TextView) view.findViewById(R.id.rating_value_text);
-        releaseDateValueTV = (TextView) view.findViewById(R.id.release_date_value_tv);
     }
 
     @Override

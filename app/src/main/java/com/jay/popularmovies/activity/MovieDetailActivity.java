@@ -1,6 +1,8 @@
 package com.jay.popularmovies.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.jay.popularmovies.R;
@@ -29,5 +31,12 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .add(R.id.container, new MovieDetailFragment())
                     .commit();
         }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Nullable
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        return super.getSupportParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
 }
