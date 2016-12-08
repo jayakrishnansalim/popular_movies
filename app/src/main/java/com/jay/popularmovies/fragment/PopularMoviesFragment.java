@@ -169,7 +169,7 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     }
 
     /**
-     * Method for fetching movied list from API
+     * Method for fetching movies list from API
      * @param sortType - sort type
      * @param clearExistingData - Whether existing data needs to be cleared or not
      */

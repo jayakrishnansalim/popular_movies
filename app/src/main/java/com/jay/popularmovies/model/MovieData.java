@@ -22,6 +22,7 @@ public class MovieData implements Parcelable {
         }
     };
 
+    private int id;
     @SerializedName("poster_path")
     private String posterPath;
     private String overview;
@@ -36,6 +37,7 @@ public class MovieData implements Parcelable {
     private String backdropPath;
 
     private MovieData(Parcel in) {
+        id = in.readInt();
         posterPath = in.readString();
         overview = in.readString();
         releaseDate = in.readString();
@@ -43,6 +45,10 @@ public class MovieData implements Parcelable {
         title = in.readString();
         backdropPath = in.readString();
         voteAverage = in.readByte();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getBackdropPath() {
@@ -76,7 +82,8 @@ public class MovieData implements Parcelable {
     @Override
     public String toString() {
         return "MovieData{" +
-                "posterPath='" + posterPath + '\'' +
+                "id=" + id +
+                ", posterPath='" + posterPath + '\'' +
                 ", overview='" + overview + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", originalTitle='" + originalTitle + '\'' +
@@ -93,6 +100,7 @@ public class MovieData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeString(posterPath);
         parcel.writeString(overview);
         parcel.writeString(releaseDate);

@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +17,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jay.popularmovies.R;
+import com.jay.popularmovies.adapter.MovieTrailerAdapter;
 import com.jay.popularmovies.constant.Const;
 import com.jay.popularmovies.model.MovieData;
+import com.jay.popularmovies.model.TrailerData;
+import com.jay.popularmovies.model.TrailerListItemData;
+import com.jay.popularmovies.retrofit.MoviesService;
+import com.jay.popularmovies.retrofit.RetrofitHelper;
 import com.jay.popularmovies.util.Util;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,8 +55,11 @@ public class MovieDetailFragment extends Fragment {
     TextView ratingText;
     @BindView(R.id.release_date_value_tv)
     TextView releaseDateValueTV;
+    @BindView(R.id.trailer_rv)
+    RecyclerView trailerRV;
 
     private MovieData movieData;
+    private MovieTrailerAdapter trailerAdapter;
 
     public MovieDetailFragment() {
     }
@@ -77,6 +92,36 @@ public class MovieDetailFragment extends Fragment {
 
     private void initialize() {
         initToolbar();
+        initializeTrailerRecyclerView();
+    }
+
+    private void initializeTrailerRecyclerView() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        trailerRV.setLayoutManager(linearLayoutManager);
+        trailerAdapter = new MovieTrailerAdapter(this);
+        trailerRV.setAdapter(trailerAdapter);
+    }
+
+    private void getMovieTrailers() {
+        MoviesService service = RetrofitHelper.getInstance().getRetrofit().create(MoviesService.class);
+        Call<TrailerData> data = service.getTrailerList(movieData.getId());
+        data.enqueue(new Callback<TrailerData>() {
+            @Override
+            public void onResponse(Call<TrailerData> call, Response<TrailerData> response) {
+                processTrailerResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<TrailerData> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void processTrailerResponse(Response<TrailerData> response) {
+        List<TrailerListItemData> trailerData = response.body().getResults();
+        trailerAdapter.setList(trailerData);
     }
 
     @Override
@@ -86,6 +131,7 @@ public class MovieDetailFragment extends Fragment {
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
         getData();
         setFieldValues();
+        getMovieTrailers();
     }
 
     /**

@@ -7,4 +7,5 @@ package com.jay.popularmovies.constant;
 public interface Const {
 
     String KEY_MOVIE_DATA = "movieData";
+    String KEY_MOVIE_ID = "id";
 }

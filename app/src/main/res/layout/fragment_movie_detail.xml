@@ -89,6 +89,16 @@
                 style="@style/SynopsisText"
                 android:layout_below="@id/game_details_rv" />
 
+            <TextView
+                android:id="@+id/trailer_title_Text"
+                style="@style/TrailerTitleText"
+                android:layout_below="@id/synopsisText" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trailer_rv"
+                style="@style/TrailerRecyclerView"
+                android:layout_below="@id/trailer_title_Text" />
+
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>

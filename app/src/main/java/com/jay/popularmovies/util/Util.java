@@ -33,7 +33,11 @@ public class Util {
         } else {
             baseURL = APIConstants.IMAGE_BASE_URL;
         }
-        Glide.with(context).load(baseURL + url)
+        loadImage(imageView, baseURL + url, context);
+    }
+
+    public static void loadImage(ImageView imageView, String url, Context context) {
+        Glide.with(context).load(url)
                 .thumbnail(THUMBNAIL_SIZE_MULTIPLIER)
                 .crossFade()
                 .error(R.drawable.ic_image_placeholder)
@@ -52,5 +56,15 @@ public class Util {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    /**
+     * Method for fetching the thumbnail of YouTube videos.
+     *
+     * @param videoId - videoId
+     * @return - Thumbnail Url
+     */
+    public static String getYouTubeThumbnail(String videoId) {
+        return String.format(APIConstants.YOU_TUBE_THUMBNAIL_URL, videoId);
     }
 }
