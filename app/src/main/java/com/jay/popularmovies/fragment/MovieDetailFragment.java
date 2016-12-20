@@ -20,6 +20,8 @@ import com.jay.popularmovies.R;
 import com.jay.popularmovies.adapter.MovieTrailerAdapter;
 import com.jay.popularmovies.constant.Const;
 import com.jay.popularmovies.model.MovieData;
+import com.jay.popularmovies.model.ReviewData;
+import com.jay.popularmovies.model.ReviewListItemData;
 import com.jay.popularmovies.model.TrailerData;
 import com.jay.popularmovies.model.TrailerListItemData;
 import com.jay.popularmovies.retrofit.MoviesService;
@@ -119,6 +121,27 @@ public class MovieDetailFragment extends Fragment {
         });
     }
 
+    private void getMovieReviews() {
+        MoviesService service = RetrofitHelper.getInstance().getRetrofit().create(MoviesService.class);
+        Call<ReviewData> data = service.getReviewList(movieData.getId());
+        data.enqueue(new Callback<ReviewData>() {
+            @Override
+            public void onResponse(Call<ReviewData> call, Response<ReviewData> response) {
+                processReviewResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<ReviewData> call, Throwable t) {
+                System.out.println();
+            }
+        });
+    }
+
+    private void processReviewResponse(Response<ReviewData> response) {
+        List<ReviewListItemData> reviewData = response.body().getResults();
+        System.out.println(reviewData);
+    }
+
     private void processTrailerResponse(Response<TrailerData> response) {
         List<TrailerListItemData> trailerData = response.body().getResults();
         trailerAdapter.setList(trailerData);
@@ -132,6 +155,7 @@ public class MovieDetailFragment extends Fragment {
         getData();
         setFieldValues();
         getMovieTrailers();
+        getMovieReviews();
     }
 
     /**
