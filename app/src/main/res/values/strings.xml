@@ -9,4 +9,7 @@
     <string name="no_network_connectivity">No network connectivity. Please try again later.</string>
     <string name="something_went_wrong_text">Something went wrong. Please try after sometime.</string>
     <string name="trailer_text">Trailers</string>
+    <string name="review_text">Reviews</string>
+    <string name="favorited">Movie has been added to favorite list</string>
+    <string name="unfavorited">Movie has been removed from favorite list</string>
 </resources>

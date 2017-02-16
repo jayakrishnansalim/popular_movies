@@ -7,11 +7,11 @@ package com.jay.popularmovies.model;
 
 public class ReviewListItemData {
 
-    private int id;
+    private String id;
     private String author;
     private String content;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

@@ -47,6 +47,10 @@ public class MovieData implements Parcelable {
         voteAverage = in.readByte();
     }
 
+    public MovieData() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -77,6 +81,38 @@ public class MovieData implements Parcelable {
 
     public double getVoteAverage() {
         return voteAverage;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
     @Override

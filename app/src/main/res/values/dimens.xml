@@ -18,5 +18,6 @@
     <dimen name="movie_detail_thumbnail_width">150dp</dimen>
     <dimen name="trailer_image_thumbnail_height">120dp</dimen>
     <dimen name="trailer_image_thumbnail_width">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
     <!-- End -->
 </resources>

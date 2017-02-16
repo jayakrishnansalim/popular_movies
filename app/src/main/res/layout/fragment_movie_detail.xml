@@ -29,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
+        android:id="@+id/nestedScrollView"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -38,8 +39,7 @@
             <RelativeLayout
                 android:id="@+id/game_details_rv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/movie_short_image"
@@ -99,8 +99,27 @@
                 style="@style/TrailerRecyclerView"
                 android:layout_below="@id/trailer_title_Text" />
 
+            <TextView
+                android:id="@+id/review_title_Text"
+                style="@style/ReviewTitleText"
+                android:layout_below="@id/trailer_rv" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/review_rv"
+                style="@style/TrailerRecyclerView"
+                android:layout_below="@id/review_title_Text" />
+
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:tint="#FFDF00" />
 
 </android.support.design.widget.CoordinatorLayout>
