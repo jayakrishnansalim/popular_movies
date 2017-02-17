@@ -86,7 +86,6 @@ public class MovieDetailFragment extends Fragment {
     public MovieDetailFragment() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

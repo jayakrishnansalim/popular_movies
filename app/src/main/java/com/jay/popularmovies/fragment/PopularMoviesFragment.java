@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.jay.popularmovies.R;
 import com.jay.popularmovies.adapter.PopularMoviesAdapter;
 import com.jay.popularmovies.constant.Const;
+import com.jay.popularmovies.database.PopularMovieDBHelper;
 import com.jay.popularmovies.model.MovieData;
 import com.jay.popularmovies.model.MovieListData;
 import com.jay.popularmovies.model.MovieResponseData;
@@ -51,6 +52,7 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
     private static final int SPAN_COUNT = 2;
     private static final int POSITION_POPULAR = 0;
     private static final int POSITION_TOP_RATED = 1;
+    private static final int POSITION_FAVORITE = 2;
 
     private static final String SORT_TYPE_POPULAR = "Popular";
     private static final String SORT_TYPE_TOP_RATED = "Top Rated";
@@ -144,6 +146,7 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
         List<String> choices = new ArrayList<>(2);
         choices.add(getString(R.string.spinner_choice_popular));
         choices.add(getString(R.string.spinner_choice_top_rated));
+        choices.add(getString(R.string.spinner_choice_favorites));
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.simple_spinner_item, choices);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -245,11 +248,24 @@ public class PopularMoviesFragment extends Fragment implements OnItemSelectedLis
                 break;
             case POSITION_TOP_RATED:
                 getMoviesList(SORT_TYPE_TOP_RATED, true);
+                break;
+            case POSITION_FAVORITE:
+                getFavoriteMoviesFromDB();
+                break;
         }
     }
 
     private void showNoConnectivityToast() {
         Toast.makeText(getActivity(), R.string.no_network_connectivity, Toast.LENGTH_LONG).show();
+    }
+
+    private void getFavoriteMoviesFromDB() {
+        PopularMovieDBHelper dbHelper = new PopularMovieDBHelper(getContext());
+        List<MovieData> movieDataList = dbHelper.getFavMovies();
+        movieListData = new MovieListData();
+        movieListData.setMovieDataList(movieDataList);
+        adapter.setMovieDataList(movieDataList, true);
+        progressBar.setVisibility(View.GONE);
     }
 
     /**

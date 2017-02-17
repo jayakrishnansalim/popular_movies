@@ -65,6 +65,12 @@ public class PopularMovieDBHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
+    /**
+     * Method for inserting favorite movies
+     *
+     * @param movieData - Movie data object
+     * @return - Primary key id of the inserted row
+     */
     public long insertFavMovie(MovieData movieData) {
         SQLiteDatabase db = getWritableDatabase();
         long id = 0;
@@ -85,6 +91,10 @@ public class PopularMovieDBHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    /**
+     * Method for getting the list of all favorite movies
+     * @return List<MovieData>
+     */
     public List<MovieData> getFavMovies() {
         SQLiteDatabase db = getReadableDatabase();
         List<MovieData> favMovieList = null;
@@ -123,6 +133,11 @@ public class PopularMovieDBHelper extends SQLiteOpenHelper {
         return favMovieList;
     }
 
+    /**
+     * Method responsible for getting movie data by movie id
+     * @param id - Movie id
+     * @return - MovieData
+     */
     public MovieData getMovieDataById(int id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = null;
@@ -153,12 +168,19 @@ public class PopularMovieDBHelper extends SQLiteOpenHelper {
                 movieData = setMovieData(cursor);
             }
         } finally {
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
             db.close();
         }
         return movieData;
     }
 
+    /**
+     * Method for setting cursor data to Movie data object
+     * @param cursor - Cursor
+     * @return MovieData
+     */
     private MovieData setMovieData(Cursor cursor) {
         MovieData movieData = new MovieData();
         movieData.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NAME_MOVIE_ID)));
@@ -167,11 +189,16 @@ public class PopularMovieDBHelper extends SQLiteOpenHelper {
         movieData.setReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_RELEASE_DATE)));
         movieData.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_NAME_VOTE_AVERAGE)));
         movieData.setOriginalTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_ORIGINAL_TITLE)));
-        movieData.setTitle(cursor.getColumnName(cursor.getColumnIndexOrThrow(COLUMN_NAME_TITLE)));
-        movieData.setBackdropPath(cursor.getColumnName(cursor.getColumnIndexOrThrow(COLUMN_NAME_BACKDROP_PATH)));
+        movieData.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_TITLE)));
+        movieData.setBackdropPath(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_BACKDROP_PATH)));
         return movieData;
     }
 
+    /**
+     * Method responsible for deleting a favorite movie
+     * @param movieId - Movie id
+     * @return boolean
+     */
     public boolean deleteMovieFromFav(int movieId) {
         SQLiteDatabase db = getWritableDatabase();
         int rowsAffected = 0;
