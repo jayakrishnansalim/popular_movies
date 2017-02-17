@@ -103,6 +103,9 @@ public class MovieDetailFragment extends Fragment {
         setFABClickListener();
     }
 
+    /**
+     * Method for setting FAB click listener
+     */
     private void setFABClickListener() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +124,9 @@ public class MovieDetailFragment extends Fragment {
         });
     }
 
+    /**
+     * Method for setting scroll change listener for nested scroll view
+     */
     private void setScrollChangeListener() {
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -142,6 +148,11 @@ public class MovieDetailFragment extends Fragment {
         });
     }
 
+    /**
+     * Method for translating fab in order to show and hiding it
+     *
+     * @param y - distance to translate
+     */
     private void showOrHideFAB(int y) {
         fab.animate().setInterpolator(new AccelerateDecelerateInterpolator())
                 .setDuration(TRANSLATE_DURATION_MILLIS)
@@ -167,12 +178,18 @@ public class MovieDetailFragment extends Fragment {
         return marginBottom;
     }
 
+    /**
+     * Method for initializing views
+     */
     private void initialize() {
         initToolbar();
         initializeTrailerRecyclerView();
         initializeReviewRecyclerView();
     }
 
+    /**
+     * Method for initializing FAB
+     */
     private void initializeFAB() {
         if (isAlreadyFavorited()) {
             setFABIcon(ic_star_black_24dp);
@@ -181,6 +198,10 @@ public class MovieDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Method for changing FAB icon when user favorite or unfavorite movie
+     * @param resId - Drawable resource id
+     */
     @SuppressWarnings("deprecation")
     private void setFABIcon(@DrawableRes int resId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -190,12 +211,19 @@ public class MovieDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Method for checking if the movie has been already favorited
+     * @return boolean - status of the check
+     */
     private boolean isAlreadyFavorited() {
         PopularMovieDBHelper dbHelper = new PopularMovieDBHelper(getContext());
         MovieData dbMovieData = dbHelper.getMovieDataById(movieData.getId());
         return (dbMovieData != null);
     }
 
+    /**
+     * Method for initializing Trailer recycler view
+     */
     private void initializeTrailerRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -204,6 +232,9 @@ public class MovieDetailFragment extends Fragment {
         trailerRV.setAdapter(trailerAdapter);
     }
 
+    /**
+     * Method for initializing review recycler view
+     */
     private void initializeReviewRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -212,6 +243,9 @@ public class MovieDetailFragment extends Fragment {
         reviewRV.setAdapter(reviewAdapter);
     }
 
+    /**
+     * Method responsible for fetching movie trailers from server
+     */
     private void getMovieTrailers() {
         MoviesService service = RetrofitHelper.getInstance().getRetrofit().create(MoviesService.class);
         Call<TrailerData> data = service.getTrailerList(movieData.getId());
@@ -228,6 +262,9 @@ public class MovieDetailFragment extends Fragment {
         });
     }
 
+    /**
+     * Method for fetching movie reviews from server
+     */
     private void getMovieReviews() {
         MoviesService service = RetrofitHelper.getInstance().getRetrofit().create(MoviesService.class);
         Call<ReviewData> data = service.getReviewList(movieData.getId());
@@ -244,11 +281,19 @@ public class MovieDetailFragment extends Fragment {
         });
     }
 
+    /**
+     * Method responsible for processing movie review response
+     * @param response - Response from server
+     */
     private void processReviewResponse(Response<ReviewData> response) {
         List<ReviewListItemData> reviewData = response.body().getResults();
         reviewAdapter.setList(reviewData);
     }
 
+    /**
+     * Method responsible for processing movie trailer response
+     * @param response - Response from the server
+     */
     private void processTrailerResponse(Response<TrailerData> response) {
         List<TrailerListItemData> trailerData = response.body().getResults();
         trailerAdapter.setList(trailerData);
@@ -286,6 +331,9 @@ public class MovieDetailFragment extends Fragment {
         releaseDateValueTV.setText(movieData.getReleaseDate());
     }
 
+    /**
+     * Method for initializing toolbar
+     */
     private void initToolbar() {
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         appCompatActivity.setSupportActionBar(toolbar);
