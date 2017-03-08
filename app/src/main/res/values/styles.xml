@@ -188,7 +188,7 @@
     </style>
 
     <style name="ReviewRecyclerView" parent="TrailerRecyclerView">
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">220dp</item>
     </style>
 
     <style name="TrailerThumbnailIV">
@@ -200,7 +200,7 @@
 
     <style name="ReviewCardView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginLeft">10dp</item>
@@ -221,11 +221,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ReviewText" parent="TextAppearance.AppCompat.Small">
+    <style name="ReviewText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:lineSpacingExtra">5dp</item>
+        <item name="android:maxLines">6</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:ellipsize">end</item>
     </style>
 

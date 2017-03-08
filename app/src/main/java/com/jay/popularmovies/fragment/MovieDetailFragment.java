@@ -237,7 +237,7 @@ public class MovieDetailFragment extends Fragment {
      */
     private void initializeReviewRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         reviewRV.setLayoutManager(linearLayoutManager);
         reviewAdapter = new MovieReviewAdapter(this);
         reviewRV.setAdapter(reviewAdapter);
